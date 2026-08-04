@@ -1,0 +1,15 @@
+{
+    "name": "kerna",
+"manifest_version": 3,
+"version": "1.0",
+"action" : {
+    "default_popup": "popup.html"
+}
+}
+
+"content_scripts": [
+    {
+        "matches": ["/"],
+        "js": ["content.js"]
+    }
+]
