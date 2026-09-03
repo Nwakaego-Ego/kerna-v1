@@ -39,11 +39,31 @@ function detectHighlight() {
         const entry = {
           text: currentSelection,
           sourceUrl: window.location.href,
+          id: crypto.randomUUID(),
         };
-        const storageData = {
-          latestEntry: entry,
-        };
-        chrome.storage.local.set(storageData);
+
+        chrome.storage.local.get("entries", function (result) {
+          const entries = result.entries || [];
+          const isDuplicate = entries.some((existingEntry) => {
+            return (
+              existingEntry.text === entry.text &&
+              existingEntry.sourceUrl === entry.sourceUrl
+            );
+          });
+          if (isDuplicate === true) {
+            return;
+          }
+          entries.push(entry);
+          console.log("New entries", entries);
+
+          const storageData = {
+            entries: entries,
+          };
+
+          chrome.storage.local.set(storageData, function () {
+            console.log("Entries saved", storageData);
+          });
+        });
       });
     }
   });
